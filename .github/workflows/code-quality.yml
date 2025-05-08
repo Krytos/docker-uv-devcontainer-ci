@@ -1,0 +1,22 @@
+name: Code Quality
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv sync --no-dev
+      - name: Ruff
+        uses: chartboost/ruff-action@v1
+        with:
+          args: check --fix
+          src: "./backend"
+          config: pyproject.toml

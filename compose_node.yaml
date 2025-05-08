@@ -1,0 +1,68 @@
+services:
+  postgres:
+    container_name: project-name-postgres
+    image: postgres:16
+    network_mode: host
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: project_name
+      POSTGRES_PASSWORD: project_name
+      POSTGRES_DB: project-name-staging
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/postgres:/data/postgres
+  backend:
+    working_dir: /app
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    image: project-name-backend:dev
+    command: uv run manage.py runserver 0.0.0.0:8000
+    env_file:
+      - ./backend/.env
+    network_mode: host
+    depends_on:
+      - postgres
+    environment:
+      SHELL: /bin/bash
+      VIRTUAL_ENV: /.venv
+    volumes:
+      - ./backend:/app:cached
+      - ./pyproject.toml:/pyproject.toml
+      - node-modules:/app/node_modules:cached
+      - static-files:/app/stgstudio/static:cached
+      - static-files:/app/static:cached
+  test:
+    image: project-name-backend:dev
+    command: uv run -m pytest -v -p no:cacheprovider -W ignore::DeprecationWarning
+    network_mode: host
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - backend
+    profiles:
+      - test
+    environment:
+      SHELL: /bin/bash
+      VIRTUAL_ENV: /.venv
+      DJANGO_SETTINGS_MODULE: project-name.settings
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - '**/__pycache__/'
+            - '**/*.pyc'
+            - '**/static/'
+            - '**/.venv/'
+        - action: rebuild
+          path: ./pyproject.toml
+        - action: sync+restart
+          path: ./backend/tests
+          target: /app/tests
+
+volumes:
+  node-modules:
+  static-files:

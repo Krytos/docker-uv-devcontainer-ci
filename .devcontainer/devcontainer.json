@@ -1,0 +1,114 @@
+{
+  "name": "gaylord",
+  "dockerComposeFile": [
+    "../compose.yaml"
+  ],
+  "service": "backend",
+  "workspaceFolder": "/app",
+  "postStartCommand": "uv run manage.py migrate",
+  "postAttachCommand": [
+    "python",
+    "-m",
+    "debugpy",
+    "--listen",
+    "0.0.0.0:5678",
+    "manage.py",
+    "runserver",
+    "0.0.0.0:8000",
+  ],
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "remote.autoForwardPorts": false,
+        "python.defaultInterpreterPath": "/.venv/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.ruffEnabled": true,
+        "editor.formatOnSave": true,
+        "ruff.nativeServer": true,
+        "python.editor.defaultFormatter": "charliermarsh.ruff",
+        "launch": {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "name": "Run Django Debug",
+              "type": "debugpy",
+              "request": "attach",
+              "connect": {
+                "host": "localhost",
+                "port": 5678
+              },
+              "django": true
+            }
+          ]
+        }
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "charliermarsh.ruff",
+        "ms-azuretools.vscode-docker",
+        "tamasfe.even-better-toml",
+        "batisteo.vscode-django",
+        "ArturoDent.launch-config"
+      ]
+    },
+    "jetbrains": {
+      "backend": "PyCharm",
+      "plugins": ["insyncwithfoo.ryecharm"],
+      "settings": {
+        "com.intellij:app:BaseRefactoringSettings.safe_delete_when_delete": false,
+        "com.intellij:app:BaseRefactoringSettings.rename_search_in_comments_for_file": false,
+        "com.intellij:app:BaseRefactoringSettings.rename_search_for_references_for_file": false,
+        "com.intellij:app:BuiltInServerOptions.builtInServerPort": 63341,
+        "com.intellij:app:BuiltInServerOptions.builtInServerAvailableExternally": true,
+        "com.intellij:app:DateTimeFormatter.dateFormatPattern": "dd.MM.yyyy",
+        "com.intellij:app:DateTimeFormatter.overrideSystemDateFormat": true,
+        "com.intellij:app:EditorSettings.is_ensure_newline_at_eof": true,
+        "com.intellij:app:EditorSettings.remove_trailing_blank_lines": true,
+        "com.intellij:app:EmmetOptions.emmetExpandShortcut": 10,
+        "com.intellij:app:EmmetOptions.filtersEnabledByDefault": ["bem"],
+        "com.intellij:app:EmmetOptions.previewEnabled": true,
+        "com.intellij:app:GeneralSettings.autoSaveIfInactive": true,
+        "com.intellij:app:ProjectViewSharedSettings.showMembers": true,
+        "PythonCore:app:PyCodeInsightSettings.insert_type_docstub": true,
+        "PythonCore:app:PythonFoldingSettings.collapse_long_strings": true,
+        "PythonCore:app:PythonFoldingSettings.collapse_long_collections": true,
+        "PythonCore:app:PythonFoldingSettings.collapse_sequential_comments": true,
+        "com.intellij:app:Vcs-Log-App-Settings.prefer_commit_date": true,
+        "com.intellij:app:Vcs-Log-App-Settings.show_changes_from_parents": true,
+        "com.intellij:app:VcsApplicationSettings.create_changelists_automatically": true,
+        "com.intellij:app:XmlEditorOptions.showCssInlineColorPreview": true,
+      },
+      "runConfigurations": [
+        {
+          "name": "Django Server",
+          "type": "django",
+          "command": "runserver",
+          "args": "0.0.0.0:8000",
+          "django": true
+        },
+        {
+          "name": "Django Tests",
+          "type": "django-tests",
+          "target": ".",
+          "django": true
+        }
+      ],
+      "debugConfigurations": [
+        {
+          "name": "Django Debug",
+          "type": "python",
+          "request": "attach",
+          "port": 5678,
+          "host": "localhost",
+          "django": true
+        }
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  }
+}

@@ -1,0 +1,22 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv sync
+      - name: Run tests
+        run: uv run pytest ${{ github.workspace }}/backend
