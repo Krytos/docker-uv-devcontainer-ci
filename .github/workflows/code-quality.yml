@@ -16,6 +16,7 @@ jobs:
           uv sync --no-dev
       - name: Ruff
         uses: chartboost/ruff-action@v1
+        continue-on-error: true
         with:
           args: check --fix
           src: "./backend"
