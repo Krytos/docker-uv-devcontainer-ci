@@ -1,7 +1,7 @@
 [project]
 name = "PROJECT_NAME"
 authors = [
-    { name = "CandyLabs GmbH", email = "info@candylabs.de" },
+    { name = "Kevin", email = "kevin@meinon.de" },
 ]
 readme = "README.md"
 version = "0.1.0"
